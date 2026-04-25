@@ -1,62 +1,72 @@
 
-
-
-def add(a, b):
-    return a + b
-
-
-def subtract(a, b):
-    return a - b
-
-
-def multiply(a, b):
-    return a * b
-
-
-def divide(a, b):
-    if b == 0:
-        raise ValueError("Деление на ноль невозможно!")
-    return a / b
+from calculator import Calculator
 
 
 def main():
-    print("=== Калькулятор ===")
+    """Основная функция калькулятора"""
+    calc = Calculator()
+
+    print("=== КАЛЬКУЛЯТОР С ИСТОРИЕЙ ===")
     print("Доступные операции: +, -, *, /")
-    print("Для выхода введите 'exit'")
+    print("Команды:")
+    print("  history - показать историю операций")
+    print("  clear   - очистить историю")
+    print("  exit    - выход из программы")
+    print()
 
     while True:
-        user_input = input("\nВведите пример (например: 5 + 3) или 'exit': ")
+        user_input = input("Введите операцию (например: 5 + 3): ")
 
+        # Проверка на выход
         if user_input.lower() == 'exit':
-            print("Выход из программы.")
+            print("Спасибо за использование калькулятора. До свидания!")
             break
 
+        # Показать историю
+        if user_input.lower() == 'history':
+            print(calc.show_history())
+            continue
+
+        # Очистить историю
+        if user_input.lower() == 'clear':
+            calc.clear_history()
+            print("История очищена!")
+            continue
+
         try:
+            # Разбор ввода пользователя
             parts = user_input.split()
+
             if len(parts) != 3:
-                print("Ошибка: введите данные в формате '5 + 3'")
+                print("❌ Ошибка: введите в формате 'число операция число'")
+                print("   Пример: 10 + 5")
                 continue
 
+            # Преобразование к числам
             num1 = float(parts[0])
-            sign = parts[1]
+            operation = parts[1]
             num2 = float(parts[2])
 
-            if sign == '+':
-                result = add(num1, num2)
-            elif sign == '-':
-                result = subtract(num1, num2)
-            elif sign == '*':
-                result = multiply(num1, num2)
-            elif sign == '/':
-                result = divide(num1, num2)
+            # Выполнение операции
+            if operation == '+':
+                result = calc.add(num1, num2)
+            elif operation == '-':
+                result = calc.subtract(num1, num2)
+            elif operation == '*':
+                result = calc.multiply(num1, num2)
+            elif operation == '/':
+                result = calc.divide(num1, num2)
             else:
-                print("Ошибка: неизвестный знак операции")
+                print(f"❌ Ошибка: неизвестная операция '{operation}'")
+                print("   Доступные операции: +, -, *, /")
                 continue
 
-            print(f"Результат: {result}")
+            print(f"✅ Результат: {result}")
 
-        except ValueError:
-            print("Ошибка: проверьте, что вы ввели числа.")
+        except ValueError as e:
+            print(f"❌ Ошибка: {e}")
+        except Exception as e:
+            print(f"❌ Неизвестная ошибка: {e}")
 
 
 if __name__ == "__main__":
